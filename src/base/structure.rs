@@ -1,9 +1,25 @@
-use crate::base::gwindow::{moveby, putline};
+use crate::base::gwindow::{moveby, putline, render_struct, NextPos, NextPos::*};
+use std::cmp::max;
+use std::ops::Deref;
 
 pub trait Structure {
     fn offset(&self) -> (u16, u16);
     fn size(&self) -> (u16, u16);
     fn render(&self);
+}
+
+impl Structure for Box<dyn Structure> {
+    fn offset(&self) -> (u16, u16) {
+        self.deref().offset()
+    }
+
+    fn size(&self) -> (u16, u16) {
+        self.deref().size()
+    }
+
+    fn render(&self) {
+        self.deref().render();
+    }
 }
 
 pub struct Tag {
@@ -52,5 +68,60 @@ impl Structure for Tag {
         }
 
         putline(&s[i..s.len()]);
+    }
+}
+
+pub struct List {
+    offset: (u16, u16),
+    chained: NextPos,
+    children: Vec<Box<dyn Structure>>,
+}
+
+impl List {
+    pub fn new(chained: NextPos, offset: (u16, u16)) -> List {
+        List {
+            offset,
+            chained,
+            children: Vec::new(),
+        }
+    }
+
+    pub fn push<T: Structure + 'static>(&mut self, e: T) {
+        self.children.push(Box::new(e));
+    }
+}
+
+impl Structure for List {
+    fn offset(&self) -> (u16, u16) {
+        self.offset
+    }
+
+    fn size(&self) -> (u16, u16) {
+        let mut s = (0, 0);
+        match self.chained {
+            Right => {
+                for child in self.children.iter() {
+                    let (cw, ch) = child.size();
+                    let (ow, oh) = child.offset();
+                    s.0 += cw + ow;
+                    s.1 = max(s.1, ch + oh);
+                }
+            }
+            Bottom => {
+                for child in self.children.iter() {
+                    let (cw, ch) = child.size();
+                    let (ow, oh) = child.offset();
+                    s.0 = max(s.0, cw + ow);
+                    s.1 += ch + oh;
+                }
+            }
+        }
+        s
+    }
+
+    fn render(&self) {
+        for child in self.children.iter() {
+            render_struct(child, self.chained);
+        }
     }
 }

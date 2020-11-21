@@ -42,6 +42,7 @@ pub fn putline(line: &str) {
     execute!(stdout(), SavePosition, Print(line), RestorePosition);
 }
 
+#[derive(Clone, Copy)]
 pub enum NextPos {
     Right,
     Bottom,
