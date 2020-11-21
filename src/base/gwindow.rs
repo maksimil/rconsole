@@ -1,7 +1,5 @@
 use crossterm::{
-    cursor::{
-        position, MoveDown, MoveLeft, MoveRight, MoveTo, MoveUp, RestorePosition, SavePosition,
-    },
+    cursor::{MoveDown, MoveLeft, MoveRight, MoveTo, MoveUp, RestorePosition, SavePosition},
     execute,
     style::Print,
     terminal::{Clear, ClearType},
@@ -29,14 +27,12 @@ pub fn moveto(pos: (u16, u16)) {
     execute!(stdout(), MoveTo(pos.0, pos.1)).expect(STDOUT_EXECUTION_ERR);
 }
 
-pub fn moveby((x, y): (u16, u16)) {
-    let (px, py) = position().expect(STDOUT_EXECUTION_ERR);
-    moveto((px + x, py + y));
+pub fn moveby(offset: (u16, u16)) {
+    execute!(stdout(), MoveRight(offset.0), MoveDown(offset.1)).expect(STDOUT_EXECUTION_ERR);
 }
 
-pub fn imoveby((x, y): (u16, u16)) {
-    let (px, py) = position().expect(STDOUT_EXECUTION_ERR);
-    moveto((px - x, py - y));
+pub fn imoveby(offset: (u16, u16)) {
+    execute!(stdout(), MoveLeft(offset.0), MoveUp(offset.1)).expect(STDOUT_EXECUTION_ERR);
 }
 
 pub fn putline(line: &str) {
