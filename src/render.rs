@@ -1,4 +1,4 @@
-use crate::base::structure::Structure;
+use crate::structure::Structure;
 use crossterm::{
     cursor::{
         position, MoveDown, MoveLeft, MoveRight, MoveTo, MoveUp, RestorePosition, SavePosition,
