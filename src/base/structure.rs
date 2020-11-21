@@ -1,4 +1,4 @@
-use crate::base::gwindow::putline;
+use crate::base::gwindow::{moveby, putline};
 
 pub trait Structure {
     fn offset(&self) -> (u16, u16);
@@ -37,6 +37,20 @@ impl Structure for Tag {
     }
 
     fn render(&self) {
-        putline(self.text.as_str());
+        let (width, height) = (self.size.0 as usize, self.size.1 as usize);
+        let s = if width * height >= self.text.len() {
+            &self.text[..]
+        } else {
+            &self.text[0..width * height]
+        };
+
+        let mut i = 0;
+        while i + width < s.len() {
+            putline(&s[i..i + width]);
+            moveby((0, 1));
+            i += width;
+        }
+
+        putline(&s[i..s.len()]);
     }
 }
