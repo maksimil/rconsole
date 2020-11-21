@@ -71,15 +71,15 @@ impl Structure for Tag {
     }
 }
 
-pub struct List {
+pub struct ListStructure {
     offset: (u16, u16),
     chained: NextPos,
     children: Vec<Box<dyn Structure>>,
 }
 
-impl List {
-    pub fn new(chained: NextPos, offset: (u16, u16)) -> List {
-        List {
+impl ListStructure {
+    pub fn new(chained: NextPos, offset: (u16, u16)) -> ListStructure {
+        ListStructure {
             offset,
             chained,
             children: Vec::new(),
@@ -91,7 +91,7 @@ impl List {
     }
 }
 
-impl Structure for List {
+impl Structure for ListStructure {
     fn offset(&self) -> (u16, u16) {
         self.offset
     }

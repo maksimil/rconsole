@@ -11,17 +11,6 @@ use std::io::{stdout, Write};
 
 const STDOUT_EXECUTION_ERR: &str = "Failed to use stdout";
 
-pub fn lf(times: u16) {
-    for _ in 0..times {
-        execute!(stdout(), Print("\n")).expect(STDOUT_EXECUTION_ERR);
-    }
-}
-
-pub fn prerender(height: u16) {
-    lf(height);
-    imoveby((0, height));
-}
-
 pub fn clear() {
     execute!(stdout(), Clear(ClearType::All), MoveTo(0, 0));
 }
