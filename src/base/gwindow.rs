@@ -1,5 +1,8 @@
+use crate::base::structure::Structure;
 use crossterm::{
-    cursor::{MoveDown, MoveLeft, MoveRight, MoveTo, MoveUp, RestorePosition, SavePosition},
+    cursor::{
+        position, MoveDown, MoveLeft, MoveRight, MoveTo, MoveUp, RestorePosition, SavePosition,
+    },
     execute,
     style::Print,
     terminal::{Clear, ClearType},
@@ -37,4 +40,28 @@ pub fn imoveby(offset: (u16, u16)) {
 
 pub fn putline(line: &str) {
     execute!(stdout(), SavePosition, Print(line), RestorePosition);
+}
+
+pub enum NextPos {
+    Right,
+    Bottom,
+}
+
+use NextPos::*;
+
+pub fn render_struct<T: Structure>(structure: &T, np: NextPos) {
+    let offset = structure.offset();
+    let size = structure.size();
+    let pos = position().expect(STDOUT_EXECUTION_ERR);
+    moveby(offset);
+    structure.render();
+    moveto(pos);
+    match np {
+        Right => {
+            moveby((size.0 + offset.0, 0));
+        }
+        Bottom => {
+            moveby((0, size.1 + offset.1));
+        }
+    };
 }
