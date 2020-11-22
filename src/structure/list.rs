@@ -3,9 +3,9 @@ use crate::structure::Structure;
 use std::cmp::max;
 
 pub struct ListStructure {
-    offset: (u16, u16),
-    chained: NextPos,
-    children: Vec<Box<dyn Structure>>,
+    pub offset: (u16, u16),
+    pub chained: NextPos,
+    pub children: Vec<Box<dyn Structure>>,
 }
 
 impl ListStructure {

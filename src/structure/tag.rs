@@ -2,9 +2,9 @@ use crate::render::{moveby, putline};
 use crate::structure::Structure;
 
 pub struct Tag {
-    offset: (u16, u16),
-    size: (u16, u16),
-    text: String,
+    pub offset: (u16, u16),
+    pub size: (u16, u16),
+    pub text: String,
 }
 
 impl Tag {
