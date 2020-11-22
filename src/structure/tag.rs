@@ -8,6 +8,10 @@ pub struct Tag {
 }
 
 impl Tag {
+    pub fn new_str(text: &str, offset: (u16, u16), width: u16) -> Tag {
+        Self::new(String::from(text), offset, width)
+    }
+
     pub fn new(text: String, offset: (u16, u16), width: u16) -> Tag {
         let len = text.len() as u16;
         Tag {
