@@ -1,4 +1,4 @@
-use crate::element::Element;
+use crate::element::{Element, Navigate};
 use crate::render::putline;
 
 pub struct Tag {
@@ -39,5 +39,15 @@ impl Element for Tag {
 
     fn shouldupdate(&self) -> bool {
         self.shouldupdate
+    }
+}
+
+impl<T> Navigate<T> for Tag {
+    fn child_ref(&self, _: usize) -> Option<&T> {
+        None
+    }
+
+    fn child_mut(&mut self, _: usize) -> Option<&mut T> {
+        None
     }
 }
