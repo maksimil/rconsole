@@ -1,8 +1,20 @@
+use crate::render::{cpos, moveto};
+
+pub mod list;
+pub mod size_cell;
 pub mod tag;
 
 pub trait Element {
     fn size(&self) -> (u16, u16);
-    fn render(&mut self);
+
+    fn render(&mut self) {
+        let cp = cpos();
+        self.render_inner();
+        moveto(cp);
+    }
+
+    fn render_inner(&mut self);
+
     fn shouldupdate(&self) -> bool;
 }
 
