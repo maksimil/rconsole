@@ -33,3 +33,16 @@ pub fn putline(line: &str) {
 pub fn cpos() -> (u16, u16) {
     position().expect("Was not able to get cursor positioin")
 }
+
+pub fn clear_zone((width, height): (u16, u16)) {
+    let cp = cpos();
+    let s = (0..width).fold(String::new(), |mut s, _| {
+        s.push(' ');
+        s
+    });
+    for _ in 0..height {
+        putline(s.as_str());
+        moveby((0, 1));
+    }
+    moveto(cp);
+}
