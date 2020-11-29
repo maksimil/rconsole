@@ -1,5 +1,7 @@
 use crossterm::{
-    cursor::{MoveDown, MoveLeft, MoveRight, MoveTo, MoveUp, RestorePosition, SavePosition},
+    cursor::{
+        position, MoveDown, MoveLeft, MoveRight, MoveTo, MoveUp, RestorePosition, SavePosition,
+    },
     execute,
     style::Print,
     terminal::{Clear, ClearType},
@@ -26,4 +28,8 @@ pub fn imoveby(offset: (u16, u16)) {
 
 pub fn putline(line: &str) {
     execute!(stdout(), SavePosition, Print(line), RestorePosition);
+}
+
+pub fn cpos() -> (u16, u16) {
+    position().expect("Was not able to get cursor positioin")
 }
