@@ -4,7 +4,8 @@ use crossterm::{
     },
     execute,
     style::Print,
-    terminal::{Clear, ClearType},
+    terminal,
+    terminal::{Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use std::io::{stdout, Write};
 
@@ -36,4 +37,16 @@ pub fn putline_rp(line: &str) {
 
 pub fn cpos() -> (u16, u16) {
     position().expect(STDOUT_EXECUTION_ERR)
+}
+
+pub fn ealt_screen() {
+    execute!(stdout(), EnterAlternateScreen).expect(STDOUT_EXECUTION_ERR);
+}
+
+pub fn lalt_screen() {
+    execute!(stdout(), LeaveAlternateScreen).expect(STDOUT_EXECUTION_ERR);
+}
+
+pub fn size() -> (u16, u16) {
+    terminal::size().expect(STDOUT_EXECUTION_ERR)
 }
