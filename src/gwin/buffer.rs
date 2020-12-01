@@ -1,19 +1,30 @@
 #[derive(Debug)]
-pub struct PutLine(pub usize, pub String);
+pub struct PutLine_<S: AsRef<str>>(usize, S);
 
-impl PutLine {
-    fn sx(&self) -> usize {
+impl<S: AsRef<str>> PutLine_<S> {
+    pub fn new(x: usize, s: S) -> Self {
+        PutLine_(x, s)
+    }
+
+    pub fn sx(&self) -> usize {
         self.0
     }
 
-    fn len(&self) -> usize {
-        self.1.len()
+    pub fn as_str(&self) -> &str {
+        self.1.as_ref()
     }
 
-    fn ex(&self) -> usize {
+    pub fn len(&self) -> usize {
+        self.as_str().len()
+    }
+
+    pub fn ex(&self) -> usize {
         self.sx() + self.len()
     }
 }
+
+type PutLine = PutLine_<String>;
+type PutLineStr<'s> = PutLine_<&'s str>;
 
 #[derive(Debug)]
 pub struct GBuffer {
@@ -35,7 +46,7 @@ impl GBuffer {
         self.expand(y + 1);
 
         let line = &mut self.lines[y];
-        let pl = PutLine(x, s);
+        let pl = PutLine::new(x, s);
 
         if line.len() > 0 && line[line.len() - 1].ex() > pl.sx() {
             panic!("Function putline does not allow overlapping line putting");
