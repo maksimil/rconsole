@@ -1,5 +1,7 @@
+use std::iter;
+
 #[derive(Debug)]
-pub struct PutLine_<S: AsRef<str>>(usize, S);
+pub struct PutLine_<S: AsRef<str>>(usize, pub S);
 
 impl<S: AsRef<str>> PutLine_<S> {
     pub fn new(x: usize, s: S) -> Self {
@@ -23,8 +25,26 @@ impl<S: AsRef<str>> PutLine_<S> {
     }
 }
 
-type PutLine = PutLine_<String>;
-type PutLineStr<'s> = PutLine_<&'s str>;
+pub type PutLine = PutLine_<String>;
+pub type PutLineStr<'s> = PutLine_<&'s str>;
+
+pub fn enbuffer<S: AsRef<str>>(s: &mut String, pl: &PutLine_<S>) {
+    if pl.ex() > s.len() {
+        s.extend(iter::repeat(' ').take(pl.ex() - s.len()));
+    }
+
+    s.replace_range(pl.sx()..pl.ex(), pl.as_str());
+}
+
+pub fn buffer<S: AsRef<str>>(pls: &Vec<PutLine_<S>>) -> String {
+    let mut s = String::new();
+
+    for pl in pls.into_iter() {
+        enbuffer(&mut s, pl);
+    }
+
+    s
+}
 
 #[derive(Debug)]
 pub struct GBuffer {
