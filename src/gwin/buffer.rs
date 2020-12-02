@@ -3,6 +3,12 @@ use std::iter;
 #[derive(Debug)]
 pub struct PutLine_<S: AsRef<str>>(usize, pub S);
 
+impl<S: AsRef<str> + Clone> Clone for PutLine_<S> {
+    fn clone(&self) -> Self {
+        PutLine_(self.sx(), self.1.clone())
+    }
+}
+
 impl<S: AsRef<str>> PutLine_<S> {
     pub fn new(x: usize, s: S) -> Self {
         PutLine_(x, s)
@@ -50,7 +56,7 @@ pub fn buffer<S: AsRef<str>>(pls: &Vec<PutLine_<S>>) -> String {
     s
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct GBuffer {
     lines: Vec<Vec<PutLine>>,
 }
