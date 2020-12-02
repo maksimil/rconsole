@@ -1,11 +1,26 @@
-use crate::gwin::buffer::{GBuffer, PutLine, PutLineStr};
+use crate::gwin::buffer::{enbuffer, GBuffer};
 use crate::term;
 use std::cmp::max;
+use std::iter;
 use std::mem;
 use std::ops::Drop;
 
 pub struct Window {
     buff: GBuffer,
+}
+
+pub fn commit_to_screen(prev: &str, next: &str, pos: (usize, usize)) {
+    let mut pchars = prev.split("");
+    pchars.next();
+    let mut nchars = next.split("");
+    nchars.next();
+
+    for (x, (pchar, nchar)) in pchars.zip(nchars).enumerate() {
+        if pchar != nchar {
+            term::moveto((pos.0 as u16 + x as u16, pos.1 as u16));
+            term::putline(nchar);
+        }
+    }
 }
 
 impl Window {
@@ -24,7 +39,6 @@ impl Window {
             self.buff.expand(height);
             buff.expand(height);
         }
-
         for (y, (sline, bline)) in self
             .buff
             .lines()
@@ -39,20 +53,50 @@ impl Window {
             // editing places
             let mut sx = 0;
             let mut ex = 0;
-            let mut spl: Vec<PutLineStr> = Vec::new();
-            let mut bpl: Vec<PutLineStr> = Vec::new();
+            let mut sstring: String = String::new();
+            let mut bstring: String = String::new();
             while i < sline.len() || j < bline.len() {
-                if i == sline.len() || bline[j].sx() < sline[i].sx() {
+                let (isspl, pl) = if i == sline.len() || bline[j].sx() < sline[i].sx() {
                     // next pl is bline[j]
-
                     j += 1;
+                    (false, &bline[j - 1])
                 } else {
                     // next pl is sline[i]
-
                     i += 1;
+                    (true, &sline[i - 1])
+                };
+
+                if pl.sx() >= ex {
+                    // reisize strings
+                    let slen = max(sstring.len(), bstring.len());
+                    bstring.extend(iter::repeat(' ').take(slen - bstring.len()));
+                    sstring.extend(iter::repeat(' ').take(slen - sstring.len()));
+
+                    // apped changes to screen
+                    commit_to_screen(&sstring, &bstring, (sx, y));
+
+                    // restore state
+                    sx = pl.sx();
+                    ex = pl.ex();
+                    sstring.clear();
+                    bstring.clear();
                 }
+                // buffer changes
+                enbuffer(
+                    if isspl { &mut sstring } else { &mut bstring },
+                    &pl.offset(-(sx as isize)),
+                );
+                ex = max(ex, pl.ex());
             }
+            // reisize strings
+            let slen = max(sstring.len(), bstring.len());
+            bstring.extend(iter::repeat(' ').take(slen - bstring.len()));
+            sstring.extend(iter::repeat(' ').take(slen - sstring.len()));
+
+            // apped changes to screen
+            commit_to_screen(&sstring, &bstring, (sx, y));
         }
+        mem::swap(&mut self.buff, &mut buff);
     }
 
     // pub fn edit_buffer<F: FnOnce(GBuffer) -> GBuffer>(&mut self, edit: F) {

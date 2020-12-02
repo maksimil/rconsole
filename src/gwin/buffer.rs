@@ -23,6 +23,10 @@ impl<S: AsRef<str>> PutLine_<S> {
     pub fn ex(&self) -> usize {
         self.sx() + self.len()
     }
+
+    pub fn offset(&self, d: isize) -> PutLineStr {
+        PutLineStr::new((self.sx() as isize + d) as usize, self.as_str())
+    }
 }
 
 pub type PutLine = PutLine_<String>;
