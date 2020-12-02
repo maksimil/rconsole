@@ -56,15 +56,16 @@ impl Window {
             let mut sstring: String = String::new();
             let mut bstring: String = String::new();
             while i < sline.len() || j < bline.len() {
-                let (isspl, pl) = if i == sline.len() || bline[j].sx() < sline[i].sx() {
-                    // next pl is bline[j]
-                    j += 1;
-                    (false, &bline[j - 1])
-                } else {
-                    // next pl is sline[i]
-                    i += 1;
-                    (true, &sline[i - 1])
-                };
+                let (isspl, pl) =
+                    if i == sline.len() || (j < bline.len() && bline[j].sx() < sline[i].sx()) {
+                        // next pl is bline[j]
+                        j += 1;
+                        (false, &bline[j - 1])
+                    } else {
+                        // next pl is sline[i]
+                        i += 1;
+                        (true, &sline[i - 1])
+                    };
 
                 if pl.sx() >= ex {
                     // reisize strings
