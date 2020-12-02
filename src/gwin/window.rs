@@ -112,14 +112,14 @@ impl Window {
     //     }
     // }
 
-    // pub fn open_render_clear<'s>(&'s mut self) -> Render<'s> {
-    //     let bsize = self.buff.size();
-    //     Render {
-    //         window: self,
-    //         buffer: GBuffer::new(bsize),
-    //         cpos: (0, 0),
-    //     }
-    // }
+    pub fn open_render_clear<'s>(&'s mut self) -> Render<'s> {
+        let bsize = self.buff.height();
+        Render {
+            window: self,
+            buffer: GBuffer::new(bsize),
+            cpos: (0, 0),
+        }
+    }
 }
 
 impl Drop for Window {
