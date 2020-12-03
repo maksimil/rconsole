@@ -1,3 +1,4 @@
+use crate::drawable::Drawable;
 use crate::gwin::buffer::{enbuffer, GBuffer};
 use crate::term;
 use std::cmp::max;
@@ -120,6 +121,11 @@ impl Window {
             buffer: GBuffer::new(bsize),
             cpos: (0, 0),
         }
+    }
+
+    pub fn push_drawable<D: Drawable>(&mut self, drawable: D) {
+        let mut r = self.open_render_clear();
+        drawable.draw(&mut r);
     }
 }
 
