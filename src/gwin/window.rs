@@ -158,6 +158,9 @@ impl<'s> Render<'s> {
     pub fn putline(&mut self, s: &str) {
         self.buffer.putline_str(self.cpos, s);
     }
+    pub fn draw<D: Drawable>(&mut self, drawable: &D) {
+        drawable.draw(self);
+    }
 }
 
 impl<'s> Drop for Render<'s> {
