@@ -1,7 +1,7 @@
 use crate::drawable::Drawable;
 use crate::gwin::window::Window;
 
-pub type FnElement<S, D: Drawable> = fn(&S) -> D;
+pub type FnElement<S, D> = fn(&S) -> D;
 
 pub struct Root<S, D: Drawable> {
     state: S,
@@ -19,6 +19,6 @@ impl<S, D: Drawable> Root<S, D> {
     }
 
     pub fn render(&mut self) {
-        self.window.push_drawable((self.element)(&self.state));
+        self.window.push_drawable(&(self.element)(&self.state));
     }
 }

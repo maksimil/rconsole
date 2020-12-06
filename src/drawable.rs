@@ -8,12 +8,12 @@ pub trait Drawable {
     fn draw(&self, r: &mut Render);
 }
 
-pub enum StdDrawable<'s> {
-    Tag(tag::TagStr<'s>),
-    List(list::List<StdDrawable<'s>>),
+pub enum StdDrawable {
+    Tag(tag::Tag<String>),
+    List(list::List<StdDrawable>),
 }
 
-impl<'s> Drawable for StdDrawable<'s> {
+impl Drawable for StdDrawable {
     fn size(&self) -> (usize, usize) {
         match self {
             Self::Tag(s) => s.size(),
@@ -27,4 +27,12 @@ impl<'s> Drawable for StdDrawable<'s> {
             Self::List(s) => s.draw(r),
         }
     }
+}
+
+pub fn std_tag(string: String) -> StdDrawable {
+    StdDrawable::Tag(tag::Tag::new(string))
+}
+
+pub fn std_list(list: list::List<StdDrawable>) -> StdDrawable {
+    StdDrawable::List(list)
 }

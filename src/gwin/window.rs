@@ -123,7 +123,7 @@ impl Window {
         }
     }
 
-    pub fn push_drawable<D: Drawable>(&mut self, drawable: D) {
+    pub fn push_drawable<D: Drawable>(&mut self, drawable: &D) {
         let mut r = self.open_render_clear();
         drawable.draw(&mut r);
     }
