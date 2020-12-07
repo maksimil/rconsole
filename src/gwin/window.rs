@@ -142,6 +142,10 @@ pub struct Render<'s> {
 }
 
 impl<'s> Render<'s> {
+    pub fn cpos(&self) -> (usize, usize) {
+        self.cpos
+    }
+
     pub fn moveto(&mut self, pos: (usize, usize)) {
         self.cpos = pos;
     }

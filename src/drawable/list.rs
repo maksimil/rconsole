@@ -44,8 +44,10 @@ impl Drawable for List {
 
     fn draw(&self, r: &mut Render) {
         for element in self.elements.iter() {
+            let cp = r.cpos();
             r.draw(element);
             let sz = element.size();
+            r.moveto(cp);
             match self.chain {
                 ChainType::Right => {
                     r.moveby((sz.0, 0));

@@ -6,6 +6,7 @@ use crossterm::{
     style::Print,
     terminal,
     terminal::{Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen},
+    write_ansi_code,
 };
 use std::io::{stdout, Write};
 
