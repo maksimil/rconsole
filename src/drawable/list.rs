@@ -8,25 +8,22 @@ pub enum ChainType {
     Right,
 }
 
-pub struct List<T: Drawable> {
+pub struct List {
     chain: ChainType,
-    elements: Vec<T>,
+    elements: Vec<Box<dyn Drawable>>,
 }
 
-impl<T: Drawable> List<T> {
-    pub fn new(chain: ChainType) -> List<T> {
-        List {
-            chain,
-            elements: Vec::new(),
-        }
+impl List {
+    pub fn new(elements: Vec<Box<dyn Drawable>>, chain: ChainType) -> List {
+        List { chain, elements }
     }
 
-    pub fn push(&mut self, e: T) {
+    pub fn push(&mut self, e: Box<dyn Drawable>) {
         self.elements.push(e);
     }
 }
 
-impl<T: Drawable> Drawable for List<T> {
+impl Drawable for List {
     fn size(&self) -> (usize, usize) {
         let mut s = (0, 0);
         for element in self.elements.iter() {
@@ -59,4 +56,8 @@ impl<T: Drawable> Drawable for List<T> {
             }
         }
     }
+}
+
+pub fn list(elements: Vec<Box<dyn Drawable>>, chain: ChainType) -> Box<dyn Drawable> {
+    Box::new(List::new(elements, chain))
 }

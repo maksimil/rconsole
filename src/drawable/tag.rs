@@ -5,8 +5,6 @@ pub struct Tag<S: AsRef<str>> {
     text: S,
 }
 
-pub type TagStr<'s> = Tag<&'s str>;
-
 impl<S: AsRef<str>> Tag<S> {
     pub fn new(text: S) -> Tag<S> {
         Tag { text }
@@ -21,4 +19,8 @@ impl<S: AsRef<str>> Drawable for Tag<S> {
     fn draw(&self, r: &mut Render) {
         r.putline(self.text.as_ref());
     }
+}
+
+pub fn tag(s: String) -> Box<dyn Drawable> {
+    Box::new(Tag::new(s))
 }

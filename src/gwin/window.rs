@@ -155,9 +155,11 @@ impl<'s> Render<'s> {
         self.cpos.0 -= x;
         self.cpos.1 -= y;
     }
+
     pub fn putline(&mut self, s: &str) {
         self.buffer.putline_str(self.cpos, s);
     }
+
     pub fn draw<D: Drawable>(&mut self, drawable: &D) {
         drawable.draw(self);
     }

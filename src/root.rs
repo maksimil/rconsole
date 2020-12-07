@@ -6,7 +6,7 @@ use std::sync::{
     mpsc::{Receiver, Sender},
 };
 
-pub type FnElement<S, D> = fn(&S) -> D;
+pub type FnElement<S> = fn(&S) -> Box<dyn Drawable>;
 pub type Mutator<S> = fn(S) -> S;
 
 pub fn mutate<T>(value: &mut T, mutator: Mutator<T>) {
@@ -16,19 +16,19 @@ pub fn mutate<T>(value: &mut T, mutator: Mutator<T>) {
     }
 }
 
-pub struct Root<S, D: Drawable> {
+pub struct Root<S> {
     // state
     state: S,
     shouldupdate: bool,
     rx: Receiver<Mutator<S>>,
     tx: Sender<Mutator<S>>,
     // etc
-    element: FnElement<S, D>,
+    element: FnElement<S>,
     window: Window,
 }
 
-impl<S, D: Drawable> Root<S, D> {
-    pub fn new(state: S, element: FnElement<S, D>) -> Self {
+impl<S> Root<S> {
+    pub fn new(state: S, element: FnElement<S>) -> Self {
         let (tx, rx) = mpsc::channel();
         Root {
             rx,
